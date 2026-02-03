@@ -16,7 +16,6 @@ primary_region = 'iad'
   processes = ["app"]
   [[services.ports]]
     port = 3306
-    handlers = ["tls"]
 
   [[services.tcp_checks]]
     interval = "15s"
