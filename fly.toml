@@ -1,26 +1,20 @@
-# fly.toml for a Fly.io MySQL app
 app = 'hosted-mysql'
 primary_region = 'iad'
 
-# Use the official MySQL container image
 [build]
   image = 'mysql:8.0.37'
 
-# Define how MySQL starts; this uses the native password plugin
 [processes]
-  app = "--datadir /data/mysql --default-authentication-plugin mysql_native_password"
+  # Start MySQL with the native password plugin; data lives in the container
+  app = "--default-authentication-plugin mysql_native_password"
 
-# Persist data in a Fly volume; create with `fly volumes create mysqldata --size 10`
-[mounts]
-  source = "mysqldata"
-  destination = "/data"
-
-# Environment variables for database and user; passwords are set via `fly secrets`
+# Environment variables define database, user, and passwords
 [env]
-  MYSQL_DATABASE = "test_db"
-  MYSQL_USER     = "db_user"
+  MYSQL_DATABASE      = "test_db"
+  MYSQL_USER          = "db_user"
+  MYSQL_PASSWORD      = "db_password"
+  MYSQL_ROOT_PASSWORD = "root_password"
 
-# VM sizing; adjust memory/CPU as needed
 [[vm]]
   memory   = '1gb'
   cpu_kind = 'shared'
