@@ -1,0 +1,28 @@
+# fly.toml for a MySQL database on Fly.io
+# See https://fly.io/docs/reference/configuration/ for details.
+
+app = "customer-db"      # choose a unique app name
+primary_region = "jnb"   # Johannesburg region
+
+[build]
+  image = "mysql:8.0.37"   # official MySQL 8 image; no custom build needed
+
+# Define the MySQL process. For MySQL 8, keep the native password plugin.
+[processes]
+  app = "--datadir /data/mysql --default-authentication-plugin mysql_native_password"
+
+# Persist data by mounting a volume. Create this volume with `fly volumes create mysqldata --size 10`.
+[mounts]
+  source = "mysqldata"
+  destination = "/data"
+
+# Set up a default database and non‑root user. Use secrets for passwords (see below).
+[env]
+  MYSQL_DATABASE = "test_db"
+  MYSQL_USER     = "db_user"
+
+# VM sizing (adjust as needed). At least 512 MB is recommended for MySQL.
+[[vm]]
+  memory   = "1gb"
+  cpu_kind = "shared"
+  cpus     = 1
