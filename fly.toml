@@ -5,9 +5,9 @@ primary_region = 'iad'
 [build]
   image = 'mysql:8.0.37'
 
-# Start MySQL with the native password plugin
+# Run MySQL and force legacy (native) password auth for compatibility
 [processes]
-  app = "--default-authentication-plugin mysql_native_password"
+  app = "mysqld --default-authentication-plugin=mysql_native_password"
 
 # Environment variables for MySQL initialization
 # (Passwords are in plain text; this is fine for testing but not recommended for production)
@@ -24,6 +24,10 @@ primary_region = 'iad'
   processes = ["app"]
   [[services.ports]]
     port = 3306
+
+  [[services.tcp_checks]]
+    interval = "15s"
+    timeout  = "2s"
 
 # Optional VM sizing
 [[vm]]
